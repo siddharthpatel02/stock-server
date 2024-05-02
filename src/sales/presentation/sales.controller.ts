@@ -5,7 +5,7 @@ import { UserRequest } from "../../types/userRequestType";
 import mongoose from "mongoose";
 import { productService } from "../../product/domain/product.service";
 
-const createSales = async (req: UserRequest, res: Response, next) => {
+const createSales = async (req: UserRequest, res: Response, next: (arg0: any) => void) => {
   try {
     const { id } = req.user;
     const { productId, qtySold, unitCost } = req.body;
@@ -18,8 +18,8 @@ const createSales = async (req: UserRequest, res: Response, next) => {
       qtySold,
       productId
     );
-    const { productName,modelName} = updatedProductStock;
-    console.log(modelName)
+    const { productName, modelName } = updatedProductStock;
+    console.log(modelName);
 
     const createdSale = await salesService.createSale({
       productId,
@@ -27,7 +27,7 @@ const createSales = async (req: UserRequest, res: Response, next) => {
       qtySold,
       unitCost,
       productName,
-      modelName
+      modelName,
     });
     res.status(201).json({
       status: true,
@@ -43,12 +43,19 @@ const getSalesData = async (req: UserRequest, res: Response, next) => {
   try {
     const { id } = req.user;
     const type = req.query.type;
+    const sortByDate = req.query.sort;
+    console.log(sortByDate);
     const productId = req.query.productId;
+
+    if (sortByDate !== "asc" && sortByDate !== "dsc") {
+      throw new BadRequestError("Query parameter missing or invalid");
+    }
     if (type !== "user" && type !== "product") {
       throw new BadRequestError("Query parameter missing or invalid");
     }
     if (type === "user") {
-      const salesData = await salesService.getSalesByUserId(id);
+      const sortBy = sortByDate === "asc" ? 1 : -1;
+      const salesData = await salesService.getSalesByUserId(id, sortBy);
       return res
         .status(200)
         .json({ status: true, data: salesData, message: "Successful" });

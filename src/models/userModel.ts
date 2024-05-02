@@ -9,7 +9,7 @@ interface userType extends Document {
   password: string;
   confirmPassword: string;
   type: string;
-  comparePassword: (password:string) => Promise<boolean>;
+  comparePassword: (password: string) => Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema({
@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema({
   confirmPassword: {
     type: String,
     required: true,
+    enum: ["admin,:employee"],
     validate: {
       validator: function (value: string) {
         return this.password === value;

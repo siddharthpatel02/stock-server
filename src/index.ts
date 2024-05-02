@@ -8,7 +8,11 @@ import { jwtAuthentication } from "./utility/authentication";
 import { salesRoute } from "./sales/presentation/sales.route";
 import { stockRoute } from "./stock/presentation/stock.route";
 import { stockReturnRoute } from "./stockReturns/presentation/stockReturns.route";
+import { dashBoardRouter } from "./routes/dashBoardRoute";
+import { Worker, workerData } from "node:worker_threads";
+
 import cors from "cors";
+import path from "path";
 
 const app: Express = express();
 const port = process.env.PORT || 8080;
@@ -18,12 +22,25 @@ app.use(
     origin: "http://localhost:5173",
   })
 );
+
+// const newThread = new Worker("./src/worker-thread.ts", {
+//   workerData: { name: "siddharth" },
+// });
+// newThread.on("message", (m) => {
+//   console.log(m);
+// });
+// newThread.on("message", (m) => {
+//   console.log("wor");
+// });
 app.use(express.json());
+const productPictures = path.join(__dirname, "../public/uploads");
+app.use("/public", express.static(productPictures));
 app.use("/user", userRouter);
 app.use("/products", productRoute);
 app.use("/sales", salesRoute);
 app.use("/stock", stockRoute);
 app.use("/stock-returns", stockReturnRoute);
+app.use("/dashboard", dashBoardRouter);
 app.get("/auth", jwtAuthentication);
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript server");

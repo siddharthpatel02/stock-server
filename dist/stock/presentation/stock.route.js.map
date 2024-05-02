@@ -1,0 +1,1 @@
+{"version":3,"file":"stock.route.js","sourceRoot":"","sources":["../../../src/stock/presentation/stock.route.ts"],"names":[],"mappings":";;;;;;AAAA,sDAA8B;AAC9B,iEAAiE;AACjE,yDAA+D;AAE/D,MAAM,UAAU,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAC;AAO3B,gCAAU;AALnB,UAAU;KACP,KAAK,CAAC,GAAG,CAAC;KACV,IAAI,CAAC,kCAAiB,EAAE,8BAAW,CAAC;KACpC,GAAG,CAAC,kCAAiB,EAAE,+BAAY,CAAC,CAAC"}

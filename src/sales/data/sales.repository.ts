@@ -1,5 +1,6 @@
 import { ServiceUnavailableError } from "../../utility/errorHandling";
 import { Sales } from "./sales.model";
+import { SortOrder } from "mongoose";
 
 interface SaleType {
   productId: string;
@@ -7,7 +8,7 @@ interface SaleType {
   qtySold: number;
   unitCost: number;
   productName: string;
-  modelName:string
+  modelName: string;
 }
 
 class SalesRepository {
@@ -17,7 +18,7 @@ class SalesRepository {
     qtySold,
     unitCost,
     productName,
-    modelName
+    modelName,
   }: SaleType) {
     try {
       const createdSale = await Sales.create({
@@ -26,17 +27,21 @@ class SalesRepository {
         qtySold,
         unitCost,
         productName,
-        modelName
+        modelName,
       });
       return createdSale;
     } catch (error) {
       throw error;
     }
   }
-  async getSalesByUSerId(userId: string) {
+  async getSalesByUSerId(userId: string, sortBy: SortOrder) {
     try {
-      const salesData = await Sales.find({ userId });
-      return salesData;
+      const salesData = await Sales.find({ userId }).sort({ date: sortBy });
+      const formattedSalesData = salesData.map((item) => ({
+        ...item.toObject(),
+        date: item.date.toLocaleDateString(),
+      }));
+      return formattedSalesData;
     } catch (error) {
       throw error;
     }

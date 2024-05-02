@@ -30,4 +30,9 @@ const productSchema = new mongoose.Schema({
 });
 
 const Product = mongoose.model<productType>("PRODUCT", productSchema);
+// Product.collection.createIndex(
+//   { productName: 1, modelName: 1 },
+//   { unique: true }
+// );
+
 export { Product };

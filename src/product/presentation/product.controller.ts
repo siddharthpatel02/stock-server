@@ -3,11 +3,16 @@ import { Product } from "../data/product.model";
 import { BadRequestError, NotFoundError } from "../../utility/errorHandling";
 import { UserRequest } from "../../types/userRequestType";
 import { productService } from "../domain/product.service";
+
 const createProduct = async (req: UserRequest, res: Response, next) => {
   try {
+    if (!req.file) {
+      throw new BadRequestError("kindly upload image");
+    }
     console.log(req.file.filename);
     const { productName, modelName, price, description } = req.body;
-    const productPhoto = req.file.filename;
+    console.log(req.file);
+    const productPhoto = (req.file as any).key;
     const { id: createdBy } = req.user;
     const createdProduct = await productService.createProduct({
       productName,
@@ -17,9 +22,11 @@ const createProduct = async (req: UserRequest, res: Response, next) => {
       productPhoto,
       createdBy,
     });
-    res
-      .status(201)
-      .json({ status: true, data: [], message: "created Successfully" });
+    res.status(201).json({
+      status: true,
+      data: [],
+      message: "created Successfully",
+    });
   } catch (err) {
     next(new BadRequestError(err.message));
   }

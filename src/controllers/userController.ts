@@ -29,7 +29,7 @@ const getUser = async (req: Request, res: Response, next) => {
     }
     const isPasswordValid = await user.comparePassword(req.body.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedError("incorrect credentials");
+      throw new UnauthorizedError("Incorrect credentials");
       // next(new UnauthorizedError("incorrect credentials"));
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
